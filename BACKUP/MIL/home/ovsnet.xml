@@ -1,0 +1,7 @@
+<network>
+  <name>ovs-net</name>
+  <forward mode='bridge'/>
+  <bridge name='virbr10'/>
+  <virtualport type='openvswitch'/>
+</network>
+

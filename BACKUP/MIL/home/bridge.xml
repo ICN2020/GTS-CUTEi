@@ -1,0 +1,4 @@
+<network>
+  <name>bridge</name>
+  <bridge name='virbr10' stp='on' delay='0'/>
+</network>
