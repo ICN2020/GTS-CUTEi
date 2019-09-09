@@ -1,6 +1,7 @@
-# CUTEi over GTS
-CUTEi over GTS (Geant Testbed Service)
-GTS node setup
+# CUTEi over GTS (Geant Testbed Service)
+
+## GTS **node** setup
+
 ## Install kvm etc
 ```
 sudo apt-get install qemu-kvm libvirt-bin virtinst openvswitch-switch
