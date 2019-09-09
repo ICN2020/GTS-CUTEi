@@ -25,7 +25,7 @@ virsh net-start ovs-net
 ## Create virbr10 bridge
 ```sudo ovs-vsctl add-br virbr10```
 ## Create vm1.xml of the cutei VM (example of cuteivm-gtsMIL)
-```
+```xml
 <domain type='kvm'>
  <name>cuteivm-gtsMIL</name>
  <memory unit='KiB'>2097152</memory>
@@ -104,7 +104,7 @@ virsh net-start ovs-net
 virsh define vm1.xml
 virsh edit vm1
 ```
-```
+```xml
 <interface type='bridge'>
      <mac address='52:54:00:f4:3d:62'/>
      <source bridge='virbr10'/>
@@ -143,28 +143,28 @@ sudo ovs-vsctl add-port virbr10 eth3
 ```
 ## For each other cutei/GTS nodes add related eth interface to the bridge and the rule to redirect traffic to the node (example for MIL node with GW, PRG, HAM,BRA)
 ```
-ovs-ofctl del-flows virbr10                                                                                                                                                                                        
-vport_cutei=$(ovs-vsctl get Interface vnet0 ofport)                                                                                                                                                                
-vport_PRG=$(ovs-vsctl get Interface eth1 ofport)                                                                                                                                                                   
-vport_HAM=$(ovs-vsctl get Interface eth3 ofport)                                                                                                                                                                   
-vport_BRA=$(ovs-vsctl get Interface eth2 ofport)                                                                                                                                                                   
-vport_GW=$(ovs-vsctl get Interface vxlanGW ofport)                                                                                                                                                                 
-                                                                                                                                                                                                                  
-ovs-ofctl add-flow virbr10 priority=10,arp,nw_dst=160.80.103.219,actions=output:$vport_cutei                                                                                                                       
-ovs-ofctl add-flow virbr10 priority=10,ip,nw_dst=160.80.103.219,actions=output:$vport_cutei                                                                                                                        
-ovs-ofctl add-flow virbr10 priority=10,arp,nw_dst=160.80.103.218,actions=output:$vport_PRG                                                                                                                         
-ovs-ofctl add-flow virbr10 priority=10,ip,nw_dst=160.80.103.218,actions=output:$vport_PRG                                                                                                                          
-ovs-ofctl add-flow virbr10 priority=10,arp,nw_dst=160.80.103.216,actions=output:$vport_HAM                                                                                                                         
-ovs-ofctl add-flow virbr10 priority=10,ip,nw_dst=160.80.103.216,actions=output:$vport_HAM                                                                                                                          
-ovs-ofctl add-flow virbr10 priority=10,arp,nw_dst=160.80.103.217,actions=output:$vport_BRA                                                                                                                         
-ovs-ofctl add-flow virbr10 priority=10,ip,nw_dst=160.80.103.217,actions=output:$vport_BRA                                                                                                                          
+ovs-ofctl del-flows virbr10
+vport_cutei=$(ovs-vsctl get Interface vnet0 ofport)
+vport_PRG=$(ovs-vsctl get Interface eth1 ofport)
+vport_HAM=$(ovs-vsctl get Interface eth3 ofport)
+vport_BRA=$(ovs-vsctl get Interface eth2 ofport)
+vport_GW=$(ovs-vsctl get Interface vxlanGW ofport)
+
+ovs-ofctl add-flow virbr10 priority=10,arp,nw_dst=160.80.103.219,actions=output:$vport_cutei
+ovs-ofctl add-flow virbr10 priority=10,ip,nw_dst=160.80.103.219,actions=output:$vport_cutei
+ovs-ofctl add-flow virbr10 priority=10,arp,nw_dst=160.80.103.218,actions=output:$vport_PRG
+ovs-ofctl add-flow virbr10 priority=10,ip,nw_dst=160.80.103.218,actions=output:$vport_PRG
+ovs-ofctl add-flow virbr10 priority=10,arp,nw_dst=160.80.103.216,actions=output:$vport_HAM
+ovs-ofctl add-flow virbr10 priority=10,ip,nw_dst=160.80.103.216,actions=output:$vport_HAM
+ovs-ofctl add-flow virbr10 priority=10,arp,nw_dst=160.80.103.217,actions=output:$vport_BRA
+ovs-ofctl add-flow virbr10 priority=10,ip,nw_dst=160.80.103.217,actions=output:$vport_BRA
 ovs-ofctl add-flow virbr10 priority=1,actions=output:$vport_GW
 ```
 
 ## Mods on CUTEi VM for reducing MTU due to vxlan tunnelling
 changes must be written in 
 **cuteiadm@uniroma2-node01:~$ cat /opt/cutei-setup/config.json**
-```
+```json
 {
        "version": "1",
        "VMappliance": "true",
